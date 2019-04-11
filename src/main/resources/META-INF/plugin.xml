@@ -1,0 +1,27 @@
+<idea-plugin>
+  <id>com.jitterted.intellitwitch</id>
+  <name>IntelliTwitch Integrated Chat</name>
+
+  <vendor email="support@example.com" url="http://www.jitterted.com">Jitterted</vendor>
+
+  <description><![CDATA[Integrates Twitch channel chat into an IntelliJ Tool Window.]]></description>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <application-components>
+    <component>
+      <implementation-class>
+        com.jitterted.IntelliTwitchComponent
+      </implementation-class>
+    </component>
+  </application-components>
+
+  <actions>
+  </actions>
+</idea-plugin>
