@@ -6,7 +6,8 @@ plugins {
 group 'com.jitterted'
 version '0.1.0'
 
-sourceCompatibility = 12
+// make sure this is at most 1.8 to be compatible with IntelliJ's JRE
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()

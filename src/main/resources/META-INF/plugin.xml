@@ -11,17 +11,11 @@
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
+    <toolWindow id="IntelliTwitch"
+                anchor="right"
+                secondary="true"
+                icon="/images/comment_edit_8410_EdMerritt.png"
+                factoryClass="com.jitterted.IntelliTwitchToolWindowFactory"/>
   </extensions>
 
-  <application-components>
-    <component>
-      <implementation-class>
-        com.jitterted.IntelliTwitchComponent
-      </implementation-class>
-    </component>
-  </application-components>
-
-  <actions>
-  </actions>
 </idea-plugin>
