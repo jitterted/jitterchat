@@ -7,17 +7,17 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 
-public class IntelliTwitchToolWindowFactory implements ToolWindowFactory {
+public class JitterChatToolWindowFactory implements ToolWindowFactory {
   // Create the tool window content.
   public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-    ChatToolWindow calendarToolWindow = new ChatToolWindow(toolWindow);
+    ChatToolWindow chatToolWindow = new ChatToolWindow(toolWindow, project);
     ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-    Content content = contentFactory.createContent(calendarToolWindow.getContent(), "", false);
+    Content content = contentFactory.createContent(chatToolWindow.getContent(), "", false);
     toolWindow.getContentManager().addContent(content);
   }
+
   @Override
   public void init(ToolWindow window) {
-
   }
 
   @Override

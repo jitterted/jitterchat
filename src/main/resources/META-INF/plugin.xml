@@ -1,6 +1,6 @@
 <idea-plugin>
-  <id>com.jitterted.intellitwitch</id>
-  <name>IntelliTwitch Integrated Chat</name>
+  <id>com.jitterted.jitterchat</id>
+  <name>JitterChat: Integrated Twitch Chat</name>
 
   <vendor email="support@example.com" url="http://www.jitterted.com">Jitterted</vendor>
 
@@ -11,11 +11,13 @@
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="IntelliTwitch"
+    <toolWindow id="JitterChat"
                 anchor="right"
                 secondary="true"
                 icon="/images/comment_edit_8410_EdMerritt.png"
-                factoryClass="com.jitterted.IntelliTwitchToolWindowFactory"/>
+                factoryClass="com.jitterted.JitterChatToolWindowFactory"/>
+    <applicationService serviceImplementation="com.jitterted.ChatCommentService" />
+    <editor.linePainter implementation="com.jitterted.CommentLinePainter"/>
   </extensions>
 
 </idea-plugin>
