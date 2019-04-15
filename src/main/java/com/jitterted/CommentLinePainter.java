@@ -65,9 +65,9 @@ public class CommentLinePainter extends EditorLinePainter {
   public Collection<LineExtensionInfo> getLineExtensions(
       @NotNull Project project, @NotNull VirtualFile file, int lineNumber) {
 
-    ChatCommentService service = ServiceManager.getService(ChatCommentService.class);
+    ChatCommentLookup lookup = ServiceManager.getService(ChatCommentLookup.class);
 
-    if (!service.hasComment(lineNumber)) {
+    if (!lookup.hasComment(lineNumber, file)) {
       return null;
     }
 
@@ -77,7 +77,7 @@ public class CommentLinePainter extends EditorLinePainter {
       Editor editor = getEditor(document, project);
       if (editor != null && isLineWithCaret(editor, lineNumber)) {
 
-        String comment = service.commentForLine(lineNumber);
+        String comment = lookup.commentForLine(lineNumber, file);
 
         LineExtensionInfo lineExtensionInfo = new LineExtensionInfo(
             " \u00BB " + comment,

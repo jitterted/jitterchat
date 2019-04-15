@@ -10,10 +10,15 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -32,6 +37,8 @@ public class ChatToolWindow {
   private JTextArea chatText;
   private JScrollPane chatScrollPane;
   private JTextField myMessage;
+  private JPanel statusPanel;
+  private JLabel editorCommentCountLabel;
 
   private String oAuthToken;
   private String twitchClientId;
@@ -57,6 +64,31 @@ public class ChatToolWindow {
       connectButton.setEnabled(false);
     }
 
+    project.getMessageBus().connect().subscribe(
+        FileEditorManagerListener.FILE_EDITOR_MANAGER,
+        new FileEditorManagerListener() {
+          @Override
+          public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+            VirtualFile newFile = event.getNewFile();
+            String commentCount;
+            if (newFile == null) {
+              commentCount = "<no file>";
+            } else {
+              ChatCommentLookup service = ServiceManager.getService(ChatCommentLookup.class);
+              commentCount = newFile.getNameWithoutExtension() + ": " + service.commentCountFor(newFile);
+            }
+            SwingUtilities.invokeLater(() -> editorCommentCountLabel.setText(commentCount));
+          }
+        });
+
+  }
+
+  private Editor currentEditor() {
+    return FileEditorManager.getInstance(project).getSelectedTextEditor();
+  }
+
+  private VirtualFile fileFromEditor(Editor editor) {
+    return FileDocumentManager.getInstance().getFile(editor.getDocument());
   }
 
   private void sendMessage(ActionEvent actionEvent) {
@@ -81,7 +113,7 @@ public class ChatToolWindow {
     TwitchChat chat = twitchClient.getChat();
 
     chat.joinChannel("jitterted");
-    chat.sendMessage("jitterted", "Hello from JitterChat!");
+    chat.sendMessage("jitterted", "The JitterChat remote control bot is here!");
     chat.getEventManager()
         .onEvent(ChannelMessageEvent.class)
         .subscribe(this::onChannelMessage);
@@ -92,10 +124,14 @@ public class ChatToolWindow {
 
   private void onCommand(CommandEvent commandEvent) {
     String commandText = commandEvent.getCommand();
-    chatWrite("Command received from " + commandEvent.getUser() + ": '" + commandText + "'");
+    chatWrite("Command received [" + commandEvent.getUser().getName() + "]: '" + commandText + "'");
     // from user: !line 35
     // then commandText is: line 35
-    processCommand(commandText);
+    try {
+      processCommand(commandText);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
   }
 
@@ -116,14 +152,14 @@ public class ChatToolWindow {
         chatWrite("Expected 3 pieces for '" + commandText + "'");
         return;
       }
-      int lineNumber = 0;
+      int lineNumber;
       try {
         lineNumber = Integer.parseInt(split[1]) - 1;
         // comment 26 what is this thing here?
 
         String comment = split[2];
-        ChatCommentService service = ServiceManager.getService(ChatCommentService.class);
-        service.lineComment(lineNumber, comment);
+        ChatCommentLookup service = ServiceManager.getService(ChatCommentLookup.class);
+        SwingUtilities.invokeLater(() -> service.addComment(lineNumber, fileFromEditor(currentEditor()), comment));
       } catch (NumberFormatException e) {
         chatWrite("Bad line number: " + e.getMessage());
       }

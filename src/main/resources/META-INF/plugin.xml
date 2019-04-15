@@ -8,6 +8,9 @@
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
+
+  <idea-version since-build="183"/>
+
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -16,8 +19,11 @@
                 secondary="true"
                 icon="/images/comment_edit_8410_EdMerritt.png"
                 factoryClass="com.jitterted.JitterChatToolWindowFactory"/>
-    <applicationService serviceImplementation="com.jitterted.ChatCommentService" />
+    <applicationService serviceImplementation="com.jitterted.ChatCommentLookup" />
     <editor.linePainter implementation="com.jitterted.CommentLinePainter"/>
+    <codeInsight.lineMarkerProvider language="JAVA"
+                                    implementationClass="com.jitterted.CommentLineMarkerProvider"/>
+
   </extensions>
 
 </idea-plugin>
