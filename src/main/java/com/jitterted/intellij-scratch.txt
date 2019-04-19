@@ -33,3 +33,20 @@ public interface CommentCreatedNotifier {
   }
 
 
+
+    project.getMessageBus().connect().subscribe(
+        FileEditorManagerListener.FILE_EDITOR_MANAGER,
+        new FileEditorManagerListener() {
+          @Override
+          public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+            VirtualFile newFile = event.getNewFile();
+            String commentCount;
+            if (newFile == null) {
+              commentCount = "<no file>";
+            } else {
+              ChatCommentLookup service = ServiceManager.getService(ChatCommentLookup.class);
+              commentCount = newFile.getNameWithoutExtension() + ": " + service.commentCountFor(newFile);
+            }
+            ApplicationManager.getApplication().invokeLater(() -> editorCommentCountLabel.setText(commentCount));
+          }
+        });

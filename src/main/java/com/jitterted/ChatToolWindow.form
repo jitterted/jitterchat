@@ -23,10 +23,14 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="87b4b" class="javax.swing.JTextArea" binding="chatText">
+          <component id="6f5a6" class="javax.swing.JTextPane" binding="chatTextPane">
             <constraints/>
             <properties>
-              <text value="default chat text"/>
+              <background color="-1"/>
+              <contentType value="text/html"/>
+              <editable value="false"/>
+              <font name="Rival Sans" size="12"/>
+              <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#10;      sample chat text&#10;    &lt;/p&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
             </properties>
           </component>
         </children>
