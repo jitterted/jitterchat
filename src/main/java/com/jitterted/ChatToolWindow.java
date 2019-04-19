@@ -5,6 +5,7 @@ import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.TwitchChat;
 import com.github.twitch4j.chat.events.CommandEvent;
+import com.github.twitch4j.chat.events.channel.ChannelJoinEvent;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
@@ -19,25 +20,32 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class ChatToolWindow {
+  private static final Logger log = LoggerFactory.getLogger(ChatToolWindow.class);
   public static final String TWITCH_API_OAUTH_ACCESS_TOKEN_PROPERTY_KEY = "twitch.api.oauth.access.token";
   public static final String TWITCH_API_CLIENT_ID_PROPERTY_KEY = "twitch.api.client.id";
   public static final String TWITCH_API_CLIENT_SECRET_PROPERTY_KEY = "twitch.api.client.secret";
+  private static final DateTimeFormatter CHAT_TIME_FORMATTER = DateTimeFormatter.ofPattern("kk:mm");
+
+
   private final Project project;
   private JButton connectButton;
   private JPanel chatContentPanel;
   private JTextArea chatText;
   private JScrollPane chatScrollPane;
   private JTextField myMessage;
-  private JPanel statusPanel;
   private JLabel editorCommentCountLabel;
 
   private String oAuthToken;
@@ -77,7 +85,7 @@ public class ChatToolWindow {
               ChatCommentLookup service = ServiceManager.getService(ChatCommentLookup.class);
               commentCount = newFile.getNameWithoutExtension() + ": " + service.commentCountFor(newFile);
             }
-            SwingUtilities.invokeLater(() -> editorCommentCountLabel.setText(commentCount));
+            ApplicationManager.getApplication().invokeLater(() -> editorCommentCountLabel.setText(commentCount));
           }
         });
 
@@ -120,11 +128,23 @@ public class ChatToolWindow {
     chat.getEventManager()
         .onEvent(CommandEvent.class)
         .subscribe(this::onCommand);
+    chat.getEventManager()
+        .onEvent(ChannelJoinEvent.class)
+        .subscribe(this::onJoin);
+
+    chatText.setText(">> JitterChat is connected.\n");
+    connectButton.setText("Disconnect from Twitch");
+    connectButton.setEnabled(false);
+  }
+
+  private void onJoin(ChannelJoinEvent channelJoinEvent) {
+    chatText.append(">> " + channelJoinEvent.getUser().getName() + " has joined.\n");
   }
 
   private void onCommand(CommandEvent commandEvent) {
     String commandText = commandEvent.getCommand();
-    chatWrite("Command received [" + commandEvent.getUser().getName() + "]: '" + commandText + "'");
+
+    log.debug("Command received [" + commandEvent.getUser().getName() + "]: '" + commandText + "'");
     // from user: !line 35
     // then commandText is: line 35
     try {
@@ -137,8 +157,8 @@ public class ChatToolWindow {
 
   private void processCommand(String commandText) {
     String[] split = StringUtils.split(commandText, " ", 3);
-    String command = split[0];
-    if (command.equalsIgnoreCase("line")) {
+    String command = split[0].toLowerCase();
+    if (command.equals("line") || command.equals("l")) {
       if (split.length == 2) {
         try {
           int lineNumber = Integer.parseInt(split[1]) - 1;
@@ -147,7 +167,7 @@ public class ChatToolWindow {
           chatWrite("Exception during move caret: " + e.getMessage());
         }
       }
-    } else if (command.equalsIgnoreCase("comment")) {
+    } else if (command.equals("comment") || command.equals("c")) {
       if (split.length < 3) {
         chatWrite("Expected 3 pieces for '" + commandText + "'");
         return;
@@ -159,9 +179,16 @@ public class ChatToolWindow {
 
         String comment = split[2];
         ChatCommentLookup service = ServiceManager.getService(ChatCommentLookup.class);
-        SwingUtilities.invokeLater(() -> service.addComment(lineNumber, fileFromEditor(currentEditor()), comment));
+        ApplicationManager.getApplication().invokeLater(() -> {
+          VirtualFile virtualFile = fileFromEditor(currentEditor());
+          service.addComment(lineNumber, virtualFile, comment);
+        });
+
       } catch (NumberFormatException e) {
         chatWrite("Bad line number: " + e.getMessage());
+      } catch (Exception e) {
+        chatWrite("Exception during comment processing: " + e.getMessage());
+        e.printStackTrace();
       }
     }
   }
@@ -182,7 +209,9 @@ public class ChatToolWindow {
     String userName = event.getUser().getName();
     String message = event.getMessage();
 
-    chatWrite(userName + ": " + message);
+    String time = CHAT_TIME_FORMATTER.format(eventFiredAt.atZone(Clock.systemDefaultZone().getZone()));
+
+    chatWrite("[" + time + "] " + userName + ": " + message);
   }
 
   private void chatWrite(String message) {

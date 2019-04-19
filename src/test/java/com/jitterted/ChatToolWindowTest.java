@@ -9,6 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.io.FileReader;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -93,6 +96,18 @@ public class ChatToolWindowTest {
     split = StringUtils.split(text, " ", 3);
     System.out.println(Arrays.toString(split));
 
+  }
+
+  @Test
+  public void instantToIsoDatetime() throws Exception {
+    Instant instant = Clock.systemDefaultZone().instant();
+
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("kk:mm");
+
+    String time = dateTimeFormatter.format(instant.atZone(Clock.systemDefaultZone().getZone()));
+
+    assertThat(time)
+        .isEqualTo("13:00");
   }
 
 }

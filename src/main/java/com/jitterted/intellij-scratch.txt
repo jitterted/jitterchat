@@ -1,0 +1,35 @@
+public interface CommentCreatedNotifier {
+  Topic<CommentCreatedNotifier> COMMENT_CREATED_TOPIC = Topic.create("comment created", CommentCreatedNotifier.class);
+
+  void commentCreated(CommentLocation commentLocation);
+}
+
+    CommentCreatedNotifier commentCreatedNotifier = project
+        .getMessageBus()
+        .syncPublisher(CommentCreatedNotifier.COMMENT_CREATED_TOPIC);
+    commentCreatedNotifier.commentCreated(new CommentLocation(lineNumber, virtualFile));
+
+  private void init(MessageBus messageBus) {
+    messageBus.connect().subscribe(CommentCreatedNotifier.COMMENT_CREATED_TOPIC, this::addCommentToTree);
+  }
+
+
+  private void hackyNavigateTo(CommentLocation commentLocation) {
+    Document document = FileDocumentManager.getInstance().getDocument(commentLocation.virtualFile);
+    if (document == null) {
+      return;
+    }
+    Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+    FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(commentLocation.virtualFile);
+    FileEditorManager.getInstance(project).openFile(commentLocation.virtualFile, true, true);
+
+    if (editor != null && Objects.equals(editor.getDocument(), document)) {
+      editor.getCaretModel().removeSecondaryCarets();
+      editor.getCaretModel().moveToLogicalPosition(new LogicalPosition(commentLocation.lineNumber, 0));
+      editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
+      editor.getSelectionModel().removeSelection();
+      IdeFocusManager.getGlobalInstance().requestFocus(editor.getContentComponent(), true);
+    }
+  }
+
+

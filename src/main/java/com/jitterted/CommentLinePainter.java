@@ -24,6 +24,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
+/**
+ * Provides display of the comment text inline with the code
+ */
 public class CommentLinePainter extends EditorLinePainter {
   public static int getCurrentLineIndex(@NotNull Editor editor) {
     CaretModel caretModel = editor.getCaretModel();

@@ -1,5 +1,6 @@
 package com.jitterted;
 
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -7,7 +8,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 
-public class JitterChatToolWindowFactory implements ToolWindowFactory {
+public class JitterChatToolWindowFactory implements ToolWindowFactory, DumbAware {
   // Create the tool window content.
   public void createToolWindowContent(Project project, ToolWindow toolWindow) {
     ChatToolWindow chatToolWindow = new ChatToolWindow(toolWindow, project);
