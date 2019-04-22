@@ -31,7 +31,7 @@ public class CommentLineMarkerProvider implements LineMarkerProvider {
       return null;
     }
     int lineNumber = LineOffsetsUtil.create(document).getLineNumber(element.getTextOffset());
-    ChatCommentLookup lookup = ServiceManager.getService(ChatCommentLookup.class);
+    ChatCommentModel lookup = ServiceManager.getService(ChatCommentModel.class);
     if (lookup.hasComment(lineNumber, virtualFile)) {
       String comment = lookup.commentForLine(lineNumber, virtualFile);
 //      System.err.println("Found comment for element: " + element + " at line " + lineNumber + " at offset " + element.getTextOffset() + " with text range " + element.getTextRange());

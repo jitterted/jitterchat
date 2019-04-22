@@ -68,7 +68,7 @@ public class CommentLinePainter extends EditorLinePainter {
   public Collection<LineExtensionInfo> getLineExtensions(
       @NotNull Project project, @NotNull VirtualFile file, int lineNumber) {
 
-    ChatCommentLookup lookup = ServiceManager.getService(ChatCommentLookup.class);
+    ChatCommentModel lookup = ServiceManager.getService(ChatCommentModel.class);
 
     if (!lookup.hasComment(lineNumber, file)) {
       return null;

@@ -30,7 +30,7 @@ public class CommentView {
 
 
   private void createUIComponents() {
-    ChatCommentLookup service = ServiceManager.getService(ChatCommentLookup.class);
+    ChatCommentModel service = ServiceManager.getService(ChatCommentModel.class);
     createTree(service);
 
     panel = ToolbarDecorator.createDecorator(tree)
@@ -45,11 +45,11 @@ public class CommentView {
 
     tree.getSelectionModel().addTreeSelectionListener(e -> {
       Object node = e.getPath().getLastPathComponent();
-      if (!(node instanceof CommentLocation)) {
+      if (!(node instanceof CommentNode)) {
         return;
       }
 
-      final CommentLocation commentLocation = (CommentLocation) node;
+      final CommentLocation commentLocation = ((CommentNode) node).location;
 
       ApplicationManager.getApplication().invokeLater(() -> {
         new OpenFileDescriptor(project,
@@ -63,7 +63,7 @@ public class CommentView {
 
   }
 
-  private void createTree(ChatCommentLookup service) {
+  private void createTree(ChatCommentModel service) {
     tree = new Tree(service);
     UIUtil.setLineStyleAngled(tree);
     tree.setRootVisible(false);

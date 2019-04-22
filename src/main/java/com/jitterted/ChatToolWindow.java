@@ -177,7 +177,7 @@ public class ChatToolWindow {
         // comment 26 what is this thing here?
 
         String comment = split[2];
-        ChatCommentLookup service = ServiceManager.getService(ChatCommentLookup.class);
+        ChatCommentModel service = ServiceManager.getService(ChatCommentModel.class);
         ApplicationManager.getApplication().invokeLater(() -> {
           VirtualFile virtualFile = fileFromEditor(currentEditor());
           service.addComment(lineNumber, virtualFile, comment);
