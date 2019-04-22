@@ -13,6 +13,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -130,7 +131,7 @@ public class ChatToolWindow {
          .onEvent(ChannelJoinEvent.class)
          .subscribe(this::onJoin);
 
-    addItalicized("JitterChat is connected.");
+    addItalicized(">> JitterChat is connected.");
     connectButton.setText("Disconnect from Twitch");
     connectButton.setEnabled(false);
   }
@@ -160,7 +161,7 @@ public class ChatToolWindow {
       if (split.length == 2) {
         try {
           int lineNumber = Integer.parseInt(split[1]) - 1;
-          ApplicationManager.getApplication().invokeLater(() -> moveCaretTo(lineNumber));
+          ApplicationManager.getApplication().invokeLater(() -> moveCaretAndScrollTo(lineNumber));
         } catch (Exception e) {
           chatWrite("Exception during move caret: " + e.getMessage());
         }
@@ -191,7 +192,7 @@ public class ChatToolWindow {
     }
   }
 
-  private void moveCaretTo(int lineNumber) {
+  private void moveCaretAndScrollTo(int lineNumber) {
     Editor selectedTextEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
     if (selectedTextEditor == null) {
       chatWrite("Error: couldn't find the selected text editor");
@@ -199,6 +200,7 @@ public class ChatToolWindow {
     }
 
     selectedTextEditor.getCaretModel().moveToLogicalPosition(new LogicalPosition(lineNumber, 0));
+    selectedTextEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
   }
 
   private void onJoin(ChannelJoinEvent channelJoinEvent) {
