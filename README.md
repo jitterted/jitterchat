@@ -4,9 +4,13 @@ You can see an intro video about this project here: https://www.youtube.com/watc
 
 ## To Do
 
-* Make file node display nicer (short file name)  
+### Nicer File Node Display
+  * Use short file name 
   * Dynamically update comment count for file node (maybe?)
-* Add username to comment information (i.e., who submitted the comment)
+  * More fine-grained tree structure changed event
+
+### Add Username
+  * Add username to comment information (i.e., who submitted the comment)
   * Also add how many (total? active?) comments in the chat view for the user
   * Show comments by user (instead of file)
 
