@@ -1,8 +1,9 @@
 package com.jitterted;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 
-public class CommentNode {
+public class CommentNode implements Comparable<CommentNode> {
   final String comment;
   final CommentLocation location;
 
@@ -38,5 +39,10 @@ public class CommentNode {
     int result = comment.hashCode();
     result = 31 * result + location.hashCode();
     return result;
+  }
+
+  @Override
+  public int compareTo(@NotNull CommentNode o) {
+    return Integer.compare(location.lineNumber, o.location.lineNumber);
   }
 }

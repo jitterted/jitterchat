@@ -4,10 +4,12 @@ You can see an intro video about this project here: https://www.youtube.com/watc
 
 ## To Do
 
+### LinePainter
+  * Change the style of the comment to be different from code comments
+
 ### Nicer File Node Display
-  * Use short file name 
   * Dynamically update comment count for file node (maybe?)
-  * More fine-grained tree structure changed event
+  * More fine-grained tree structure changed event (inserted and removed)
 
 ### Add Username
   * Add username to comment information (i.e., who submitted the comment)
@@ -32,3 +34,5 @@ You can see an intro video about this project here: https://www.youtube.com/watc
 
 ## Fix
 * Constrain line number to be valid for given file
+
+* Move to com.jitterted.jitterchat subpackage??

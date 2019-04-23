@@ -36,10 +36,15 @@ public class CommentView {
     panel = ToolbarDecorator.createDecorator(tree)
                             .disableAddAction()
                             .setToolbarPosition(ActionToolbarPosition.LEFT)
+                            .setRemoveActionUpdater(
+                                e ->
+                                    tree.getSelectionModel()
+                                        .getSelectionPath()
+                                        .getLastPathComponent() instanceof CommentNode)
                             .setRemoveAction(action -> {
-                              CommentLocation selectedNode = (CommentLocation)
+                              CommentNode selectedNode = (CommentNode)
                                   tree.getSelectionModel().getSelectionPath().getLastPathComponent();
-                              service.removeComment(selectedNode);
+                              service.removeComment(selectedNode.location);
                             })
                             .createPanel();
 

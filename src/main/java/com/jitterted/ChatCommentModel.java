@@ -21,8 +21,8 @@ public class ChatCommentModel implements TreeModel {
 
   private final List<TreeModelListener> treeModelListeners = new ArrayList<>();
 
-  private ArrayListValuedHashMap<VirtualFile, CommentNode> fileMap = new ArrayListValuedHashMap<>();
-  private List<VirtualFile> fileList = new ArrayList<>();
+  private ArrayListValuedHashMap<FileNode, CommentNode> fileMap = new ArrayListValuedHashMap<>();
+  private List<FileNode> fileList = new ArrayList<>();
 
   public boolean hasComment(int lineNumber, VirtualFile virtualFile) {
     return lineComments.containsKey(new CommentLocation(lineNumber, virtualFile));
@@ -35,18 +35,22 @@ public class ChatCommentModel implements TreeModel {
   public void addComment(int lineNumber, VirtualFile virtualFile, String comment) {
     CommentLocation commentLocation = new CommentLocation(lineNumber, virtualFile);
     lineComments.put(commentLocation, comment);
-    fileMap.put(virtualFile, new CommentNode(commentLocation, comment));
-    if (!fileList.contains(virtualFile)) {
-      fileList.add(virtualFile);
+    FileNode fileNode = new FileNode(virtualFile);
+    fileMap.put(fileNode, new CommentNode(commentLocation, comment));
+    if (!fileList.contains(fileNode)) {
+      fileList.add(fileNode);
     }
     fireTreeStructureChanged();
   }
 
   public void removeComment(CommentLocation commentLocation) {
     String comment = lineComments.remove(commentLocation);
-    fileList.remove(commentLocation.virtualFile);
-    fileMap.removeMapping(commentLocation.virtualFile,
+    FileNode fileNode = new FileNode(commentLocation.virtualFile);
+    fileMap.removeMapping(fileNode,
                           new CommentNode(commentLocation, comment));
+    if (fileMap.get(fileNode).isEmpty()) {
+      fileList.remove(fileNode);
+    }
     fireTreeStructureChanged();
   }
 
@@ -81,8 +85,9 @@ public class ChatCommentModel implements TreeModel {
     List list;
     if (parent.equals(COMMENTS_ROOT)) {
       list = fileList;
-    } else if (parent instanceof VirtualFile) {
-      list = fileMap.get((VirtualFile) parent);
+    } else if (parent instanceof FileNode) {
+      list = fileMap.get((FileNode) parent);
+      list.sort(null);
     } else {
       list = Collections.emptyList();
     }

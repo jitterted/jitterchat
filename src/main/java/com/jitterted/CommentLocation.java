@@ -19,10 +19,7 @@ public class CommentLocation {
     CommentLocation that = (CommentLocation) o;
 
     if (lineNumber != that.lineNumber) return false;
-//      return virtualFile.equals(that.virtualFile); // equals isn't defined, so using hashCode
-
-    return virtualFile.hashCode() == (that.virtualFile.hashCode());
-
+    return virtualFile.equals(that.virtualFile);
   }
 
   @Override
