@@ -16,6 +16,7 @@ You can see an intro video about this project here: https://www.youtube.com/watc
   * Also add how many (total? active?) comments in the chat view for the user
   * Show comments by user (instead of file)
 
+```
 > [ROOT]
   > file1
     > comment 1 @ line 10
@@ -24,7 +25,7 @@ You can see an intro video about this project here: https://www.youtube.com/watc
     > comment 1
   > file3 
     > comment 1
-
+```
 
 * Try again to put something in the gutter to indicate there's a comment (look at Bookmark)
 
@@ -35,4 +36,4 @@ You can see an intro video about this project here: https://www.youtube.com/watc
 ## Fix
 * Constrain line number to be valid for given file
 
-* Move to com.jitterted.jitterchat subpackage??
+* Move to com.jitterted.jitterchat subpackage?
