@@ -1,32 +1,36 @@
 <idea-plugin>
-  <id>com.jitterted.jitterchat</id>
-  <name>JitterChat: Integrated Twitch Chat</name>
+    <id>com.jitterted.jitterchat</id>
+    <name>JitterChat: Integrated Twitch Chat</name>
 
-  <vendor email="support@example.com" url="http://www.jitterted.com">Jitterted</vendor>
+    <vendor email="support@example.com" url="http://www.jitterted.com">Jitterted</vendor>
 
-  <description><![CDATA[Integrates Twitch channel chat into an IntelliJ Tool Window.]]></description>
+    <description><![CDATA[Integrates Twitch channel chat into an IntelliJ Tool Window.]]></description>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
 
-  <idea-version since-build="183"/>
+    <idea-version since-build="183"/>
 
-  <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.lang</depends>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="JitterChat"
-                anchor="right"
-                secondary="true"
-                icon="/images/comment_edit_8410_EdMerritt.png"
-                factoryClass="com.jitterted.JitterChatToolWindowFactory"/>
-    <toolWindow id="Viewer Comments"
-                anchor="bottom"
-                secondary="true"
-                icon="/images/comment_edit_8410_EdMerritt.png"
-                factoryClass="com.jitterted.CommentViewFactory"/>
-    <applicationService serviceImplementation="com.jitterted.ChatCommentModel" />
-    <editor.linePainter implementation="com.jitterted.CommentLinePainter"/>
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="JitterChat"
+                    anchor="right"
+                    secondary="true"
+                    icon="/images/comment_edit_8410_EdMerritt.png"
+                    factoryClass="com.jitterted.JitterChatToolWindowFactory"/>
 
-  </extensions>
+        <applicationConfigurable instance="com.jitterted.ChatToolWindowConfigurable" displayName="ChatCodes" />
+
+
+        <!--    <toolWindow id="Viewer Comments"-->
+        <!--                anchor="bottom"-->
+        <!--                secondary="true"-->
+        <!--                icon="/images/comment_edit_8410_EdMerritt.png"-->
+        <!--                factoryClass="com.jitterted.CommentViewFactory"/>-->
+        <!--    <applicationService serviceImplementation="com.jitterted.ChatCommentModel" />-->
+        <!--    <editor.linePainter implementation="com.jitterted.CommentLinePainter"/>-->
+
+    </extensions>
 
 </idea-plugin>

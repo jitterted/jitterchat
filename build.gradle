@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.github.twitch4j', name: 'twitch4j', version: '1.0.0-alpha.10'
+    compile group: 'com.github.twitch4j', name: 'twitch4j', version: '1.0.0-alpha.18'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.11+'
@@ -28,8 +28,14 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2018.3.6'
-    downloadSources = true
+    // Define IntelliJ Platform against which to build the plugin project.
+    // Use the IntelliJ Platform BRANCH.BUILD version matching "targetIDE" (PhpStorm)
+    version '2020.2'   // baseIntelliJPlatformVersion
+    type 'IU'
+    downloadSources true
+    // Require the targetIDE plugin or library
+    // Use the stable version compatible with intellij.version and intellij.type specified above
+//    plugins 'com.jetbrains.php:192.6603.42'
 }
 
 patchPluginXml {

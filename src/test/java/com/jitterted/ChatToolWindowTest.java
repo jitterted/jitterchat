@@ -25,7 +25,7 @@ public class ChatToolWindowTest {
   @Test
   public void shouldLoadProperties() throws Exception {
     Properties twitchProperties = new Properties();
-    twitchProperties.load(new FileReader("/Users/ted/.twitch.properties"));
+    twitchProperties.load(new FileReader("~/.twitch.properties"));
     String oAuthToken = twitchProperties.getProperty(TWITCH_API_OAUTH_ACCESS_TOKEN_PROPERTY_KEY);
     assertThat(oAuthToken)
         .isNotEmpty();
@@ -45,7 +45,7 @@ public class ChatToolWindowTest {
     TwitchChat chat = null;
     try {
       Properties twitchProperties = new Properties();
-      twitchProperties.load(new FileReader("/Users/ted/.twitch.properties"));
+      twitchProperties.load(new FileReader("~/.twitch.properties"));
 
       String oAuthToken = twitchProperties.getProperty(TWITCH_API_OAUTH_ACCESS_TOKEN_PROPERTY_KEY);
       String twitchClientId = twitchProperties.getProperty(TWITCH_API_CLIENT_ID_PROPERTY_KEY);
