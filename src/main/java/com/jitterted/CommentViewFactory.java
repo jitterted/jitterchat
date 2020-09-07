@@ -7,9 +7,9 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
 public class CommentViewFactory implements ToolWindowFactory, DumbAware {
-  @Override
-  public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-    new CommentView(toolWindow, project);
-  }
+    @Override
+    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+        new CommentView(toolWindow, project);
+    }
 
 }

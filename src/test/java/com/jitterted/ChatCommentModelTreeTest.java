@@ -31,7 +31,7 @@ public class ChatCommentModelTreeTest {
      */
     ChatCommentModel chatCommentModel = new ChatCommentModel();
     VirtualFile file1 = new LightVirtualFile("file1");
-    chatCommentModel.addComment(10, file1, "comment 1");
+    chatCommentModel.addComment(10, file1, "comment 1", "Zaphod");
 
     Object root = chatCommentModel.getRoot();
 
@@ -62,7 +62,7 @@ public class ChatCommentModelTreeTest {
   public void addThenRemoveCommentResultsInEmptyTree() throws Exception {
     ChatCommentModel chatCommentModel = new ChatCommentModel();
     VirtualFile file1 = new LightVirtualFile("file1");
-    chatCommentModel.addComment(31, file1, "a comment");
+    chatCommentModel.addComment(31, file1, "a comment", "Zaphod");
 
     chatCommentModel.removeComment(new CommentLocation(31, file1));
 
@@ -95,7 +95,7 @@ public class ChatCommentModelTreeTest {
   public void fileNodeIsNotLeaf() throws Exception {
     ChatCommentModel chatCommentModel = new ChatCommentModel();
     VirtualFile file1 = new LightVirtualFile("file1");
-    chatCommentModel.addComment(31, file1, "a comment");
+    chatCommentModel.addComment(31, file1, "a comment", "Zaphod");
 
     Object root = chatCommentModel.getRoot();
 
@@ -111,7 +111,7 @@ public class ChatCommentModelTreeTest {
   public void commentNodeIsLeaf() throws Exception {
     ChatCommentModel chatCommentModel = new ChatCommentModel();
     VirtualFile file1 = new LightVirtualFile("file1");
-    chatCommentModel.addComment(31, file1, "a comment");
+    chatCommentModel.addComment(31, file1, "a comment", "Zaphod");
 
     Object fileNode = chatCommentModel.getChild(chatCommentModel.getRoot(), 0);
 
@@ -141,9 +141,9 @@ public class ChatCommentModelTreeTest {
      */
     ChatCommentModel chatCommentModel = new ChatCommentModel();
     VirtualFile virtualFile1 = new LightVirtualFile("file1");
-    chatCommentModel.addComment(31, virtualFile1, "comment 1 on file1");
+    chatCommentModel.addComment(31, virtualFile1, "comment 1 on file1", "Zaphod");
     VirtualFile virtualFile2 = new LightVirtualFile("file2");
-    chatCommentModel.addComment(13, virtualFile2, "comment 1 on file2");
+    chatCommentModel.addComment(13, virtualFile2, "comment 1 on file2", "Zaphod");
 
     FileNode fileNode1 = (FileNode) chatCommentModel.getChild(chatCommentModel.getRoot(), 0);
     assertThat(fileNode1.virtualFile).isEqualTo(virtualFile1);
@@ -186,10 +186,10 @@ public class ChatCommentModelTreeTest {
 
     ChatCommentModel chatCommentModel = new ChatCommentModel();
     VirtualFile virtualFile1 = new LightVirtualFile("file1");
-    chatCommentModel.addComment(31, virtualFile1, "comment 1 on file1");
-    chatCommentModel.addComment(73, virtualFile1, "comment 2 on file1");
+    chatCommentModel.addComment(31, virtualFile1, "comment 1 on file1", "Zaphod");
+    chatCommentModel.addComment(73, virtualFile1, "comment 2 on file1", "Zaphod");
     VirtualFile virtualFile2 = new LightVirtualFile("file2");
-    chatCommentModel.addComment(13, virtualFile2, "comment 1 on file2");
+    chatCommentModel.addComment(13, virtualFile2, "comment 1 on file2", "Zaphod");
 
     FileNode fileNode1 = (FileNode) chatCommentModel.getChild(chatCommentModel.getRoot(), 0);
     assertThat(fileNode1.virtualFile).isEqualTo(virtualFile1);

@@ -15,64 +15,64 @@ import com.intellij.util.ui.UIUtil;
 import javax.swing.*;
 
 public class CommentView {
-  private final Project project;
-  private JPanel panel;
-  private JTree tree;
+    private final Project project;
+    private JPanel panel;
+    private JTree tree;
 
-  public CommentView(ToolWindow toolWindow, Project project) {
-    this.project = project;
-    createUIComponents();
+    public CommentView(ToolWindow toolWindow, Project project) {
+        this.project = project;
+        createUIComponents();
 
-    ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-    Content content = contentFactory.createContent(panel, "Comments", false);
-    toolWindow.getContentManager().addContent(content);
-  }
+        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        Content content = contentFactory.createContent(panel, "Comments", false);
+        toolWindow.getContentManager().addContent(content);
+    }
 
 
-  private void createUIComponents() {
-    ChatCommentModel service = ServiceManager.getService(ChatCommentModel.class);
-    createTree(service);
+    private void createUIComponents() {
+        ChatCommentModel service = ServiceManager.getService(ChatCommentModel.class);
+        createTree(service);
 
-    panel = ToolbarDecorator.createDecorator(tree)
-                            .disableAddAction()
-                            .setToolbarPosition(ActionToolbarPosition.LEFT)
-                            .setRemoveActionUpdater(
-                                e ->
-                                    tree.getSelectionModel()
-                                        .getSelectionPath()
-                                        .getLastPathComponent() instanceof CommentNode)
-                            .setRemoveAction(action -> {
-                              CommentNode selectedNode = (CommentNode)
-                                  tree.getSelectionModel().getSelectionPath().getLastPathComponent();
-                              service.removeComment(selectedNode.location);
-                            })
-                            .createPanel();
+        panel = ToolbarDecorator.createDecorator(tree)
+            .disableAddAction()
+            .setToolbarPosition(ActionToolbarPosition.LEFT)
+            .setRemoveActionUpdater(
+                e ->
+                    tree.getSelectionModel()
+                        .getSelectionPath()
+                        .getLastPathComponent() instanceof CommentNode)
+            .setRemoveAction(action -> {
+                CommentNode selectedNode = (CommentNode)
+                    tree.getSelectionModel().getSelectionPath().getLastPathComponent();
+                service.removeComment(selectedNode.location);
+            })
+            .createPanel();
 
-    tree.getSelectionModel().addTreeSelectionListener(e -> {
-      Object node = e.getPath().getLastPathComponent();
-      if (!(node instanceof CommentNode)) {
-        return;
-      }
+        tree.getSelectionModel().addTreeSelectionListener(e -> {
+            Object node = e.getPath().getLastPathComponent();
+            if (!(node instanceof CommentNode)) {
+                return;
+            }
 
-      final CommentLocation commentLocation = ((CommentNode) node).location;
+            final CommentLocation commentLocation = ((CommentNode) node).location;
 
-      ApplicationManager.getApplication().invokeLater(() -> {
-        new OpenFileDescriptor(project,
-                               commentLocation.virtualFile,
-                               commentLocation.lineNumber,
-                               -1, // first logical column
-                               true)
-            .navigate(true);
-      });
-    });
+            ApplicationManager.getApplication().invokeLater(() -> {
+                new OpenFileDescriptor(project,
+                    commentLocation.virtualFile,
+                    commentLocation.lineNumber,
+                    -1, // first logical column
+                    true)
+                    .navigate(true);
+            });
+        });
 
-  }
+    }
 
-  private void createTree(ChatCommentModel service) {
-    tree = new Tree(service);
-    UIUtil.setLineStyleAngled(tree);
-    tree.setRootVisible(false);
-    tree.setShowsRootHandles(true);
-  }
+    private void createTree(ChatCommentModel service) {
+        tree = new Tree(service);
+        UIUtil.setLineStyleAngled(tree);
+        tree.setRootVisible(false);
+        tree.setShowsRootHandles(true);
+    }
 
 }

@@ -13,6 +13,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -88,7 +89,7 @@ public class ChatToolWindow {
     }
 
     private void sendMessageToEventLog(String text) {
-        Notifications.Bus.notify(new Notification("Tw4Ij", "Debug", text, NotificationType.INFORMATION));
+        Notifications.Bus.notify(new Notification("ChatCodes", "Tooltip", text, NotificationType.INFORMATION));
     }
 
     private void connect() throws IOException {
@@ -96,6 +97,7 @@ public class ChatToolWindow {
         addItalicized("Get set...");
 
         Properties twitchProperties = new Properties();
+        //@TODO Stop this being a hard coded file path
         twitchProperties.load(new FileReader("/Users/ghockin/.twitch.properties"));
 
         OAuth2Credential credential = new OAuth2Credential(
@@ -130,7 +132,14 @@ public class ChatToolWindow {
     }
 
     private void sendChatMessage(String message) {
+        //@TODO Fix this so it's not hard-coded and is the actual streamer's name
         twitchChat.sendMessage("spabby", message);
+        if (message.charAt(0) != '!') {
+            return;
+        }
+
+        //@TODO See above
+        processCommand(message.substring(1), "Spabby");
     }
 
     private void onCommand(CommandEvent commandEvent) {
@@ -140,6 +149,10 @@ public class ChatToolWindow {
         // from user: !line 35
         // then commandText is: line 35
         try {
+            if (commandText.charAt(0) == ' ') {
+                return;
+            }
+
             processCommand(commandText, commandEvent.getUser().getName());
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,36 +174,44 @@ public class ChatToolWindow {
                     log.debug("Exception during move caret: " + e.getMessage());
                 }
             }
-        } else if (command.equals("comment") || command.equals("c")) {
+            return;
+        }
+
+        if (command.equals("comment") || command.equals("c")) {
             int lineNumber = Integer.parseInt(split[1]) - 1;
 
             ApplicationManager.getApplication().invokeLater(() -> moveCaretAndScrollTo(lineNumber));
             ApplicationManager.getApplication().invokeLater(() -> addTheComment(split[2], commandUser));
+
+            return;
         }
-//        } else if (command.equals("comment") || command.equals("c")) {
-//            if (split.length < 3) {
-//                chatWrite("Expected 3 pieces for '" + commandText + "'");
-//                return;
-//            }
-//            int lineNumber;
-//            try {
-//                lineNumber = Integer.parseInt(split[1]) - 1;
-//                // comment 26 what is this thing here?
-//
-//                String comment = split[2];
-//                ChatCommentModel service = ServiceManager.getService(ChatCommentModel.class);
-//                ApplicationManager.getApplication().invokeLater(() -> {
-//                    VirtualFile virtualFile = fileFromEditor(currentEditor());
-//                    service.addComment(lineNumber, virtualFile, comment);
-//                });
-//
-//            } catch (NumberFormatException e) {
-//                chatWrite("Bad line number: " + e.getMessage());
-//            } catch (Exception e) {
-//                chatWrite("Exception during comment processing: " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//        }
+
+        if (command.equals("tooltip") || command.equals("t")) {
+            if (split.length < 3) {
+                chatWrite("Expected 3 pieces for '" + commandText + "'");
+                return;
+            }
+            int lineNumber;
+            try {
+                lineNumber = Integer.parseInt(split[1]) - 1;
+                // comment 26 what is this thing here?
+
+                String comment = split[2];
+                ChatCommentModel service = ServiceManager.getService(ChatCommentModel.class);
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    VirtualFile virtualFile = fileFromEditor(currentEditor());
+                    service.addComment(lineNumber, virtualFile, comment, commandUser);
+                });
+                sendMessageToEventLog(commandUser + " added a tooltip to line " + lineNumber);
+
+            } catch (NumberFormatException e) {
+                chatWrite("Bad line number: " + e.getMessage());
+            } catch (Exception e) {
+                chatWrite("Exception during comment processing: " + e.getMessage());
+                e.printStackTrace();
+            }
+            return;
+        }
     }
 
     private void addTheComment(String comment, String user) {
@@ -248,7 +269,7 @@ public class ChatToolWindow {
 
     private void initializeTextPane() {
         StyleSheet styleSheet = new StyleSheet();
-        styleSheet.addRule("body { font-face: sans-serif; font-size: medium; } #chat { padding: 2px; }");
+        styleSheet.addRule("body { font-face: sans-serif; font-size: large; } #chat { padding: 2px; }");
 
         DefaultCaret caret = (DefaultCaret) chatTextPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);

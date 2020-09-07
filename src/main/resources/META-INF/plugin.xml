@@ -23,13 +23,13 @@
         <applicationConfigurable instance="com.jitterted.ChatToolWindowConfigurable" displayName="ChatCodes" />
 
 
-        <!--    <toolWindow id="Viewer Comments"-->
-        <!--                anchor="bottom"-->
-        <!--                secondary="true"-->
-        <!--                icon="/images/comment_edit_8410_EdMerritt.png"-->
-        <!--                factoryClass="com.jitterted.CommentViewFactory"/>-->
-        <!--    <applicationService serviceImplementation="com.jitterted.ChatCommentModel" />-->
-        <!--    <editor.linePainter implementation="com.jitterted.CommentLinePainter"/>-->
+            <toolWindow id="Viewer Comments"
+                        anchor="bottom"
+                        secondary="true"
+                        icon="/images/comment_edit_8410_EdMerritt.png"
+                        factoryClass="com.jitterted.CommentViewFactory"/>
+            <applicationService serviceImplementation="com.jitterted.ChatCommentModel" />
+            <editor.linePainter implementation="com.jitterted.CommentLinePainter"/>
 
     </extensions>
 

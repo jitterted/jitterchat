@@ -18,10 +18,6 @@ public class ConfigForm implements ActionListener {
         return String.valueOf(textOauthToken.getPassword());
     }
 
-    public void setOauthTokenValue(String oAuthToken) {
-        textOauthToken.setText(oAuthToken);
-    }
-
     public JPasswordField getOauthTokenTextComponent() {
         return textOauthToken;
     }

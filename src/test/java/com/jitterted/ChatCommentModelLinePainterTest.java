@@ -8,28 +8,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ChatCommentModelLinePainterTest {
 
-  @Test
-  public void givenFileAndLineFindsExistingComment() throws Exception {
-    ChatCommentModel chatCommentModel = new ChatCommentModel();
-    VirtualFile file = new LightVirtualFile("Testing");
+    @Test
+    public void givenFileAndLineFindsExistingComment() throws Exception {
+        ChatCommentModel chatCommentModel = new ChatCommentModel();
+        VirtualFile file = new LightVirtualFile("Testing");
 
-    chatCommentModel.addComment(15, file, "the comment");
+        chatCommentModel.addComment(15, file, "the comment", "Zaphod");
 
-    assertThat(chatCommentModel.hasComment(15, file))
-        .isTrue();
-  }
+        assertThat(chatCommentModel.hasComment(15, file))
+            .isTrue();
+    }
 
-  @Test
-  public void givenCommentExistsQueryReturnsComment() throws Exception {
-    ChatCommentModel chatCommentModel = new ChatCommentModel();
-    VirtualFile file = new LightVirtualFile("Testing");
+    @Test
+    public void givenCommentExistsQueryReturnsComment() throws Exception {
+        ChatCommentModel chatCommentModel = new ChatCommentModel();
+        VirtualFile file = new LightVirtualFile("Testing");
 
-    chatCommentModel.addComment(23, file, "prime comment");
+        chatCommentModel.addComment(23, file, "prime comment", "Zaphod");
 
-    assertThat(chatCommentModel.commentForLine(23, file))
-        .isEqualTo("prime comment");
-  }
-
-
+        assertThat(chatCommentModel.commentForLine(23, file))
+            .isEqualTo("Zaphod: prime comment");
+    }
 
 }
