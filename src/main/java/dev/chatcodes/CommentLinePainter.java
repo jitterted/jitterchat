@@ -1,4 +1,4 @@
-package com.jitterted;
+package dev.chatcodes;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.*;
@@ -6,10 +6,8 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import org.jetbrains.annotations.NotNull;

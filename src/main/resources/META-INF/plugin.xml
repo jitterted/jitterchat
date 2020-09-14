@@ -1,35 +1,34 @@
 <idea-plugin>
-    <id>com.jitterted.jitterchat</id>
-    <name>JitterChat: Integrated Twitch Chat</name>
+    <id>es.chatcod</id>
+    <name>ChatCodes</name>
 
-    <vendor email="support@example.com" url="http://www.jitterted.com">Jitterted</vendor>
+    <vendor email="ghockin@twilio.com" url="http://chatcod.es">ChatCodes</vendor>
 
-    <description><![CDATA[Integrates Twitch channel chat into an IntelliJ Tool Window.]]></description>
+    <description><![CDATA[Unlease the power of mob programming by letting Twitch Chat interact directly with your IDE.]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
 
-    <idea-version since-build="183"/>
+    <idea-version since-build="202"/>
 
     <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="JitterChat"
+        <toolWindow id="ChatCodes"
                     anchor="right"
                     secondary="true"
                     icon="/images/comment_edit_8410_EdMerritt.png"
-                    factoryClass="com.jitterted.JitterChatToolWindowFactory"/>
+                    factoryClass="dev.chatcodes.ChatToolWindowFactory"/>
 
-        <applicationConfigurable instance="com.jitterted.ChatToolWindowConfigurable" displayName="ChatCodes" />
+        <applicationConfigurable instance="dev.chatcodes.ChatCodesConfigurable" displayName="ChatCodes"/>
 
-
-            <toolWindow id="Viewer Comments"
-                        anchor="bottom"
-                        secondary="true"
-                        icon="/images/comment_edit_8410_EdMerritt.png"
-                        factoryClass="com.jitterted.CommentViewFactory"/>
-            <applicationService serviceImplementation="com.jitterted.ChatCommentModel" />
-            <editor.linePainter implementation="com.jitterted.CommentLinePainter"/>
+<!--        <toolWindow id="Viewer Comments"-->
+<!--                    anchor="bottom"-->
+<!--                    secondary="true"-->
+<!--                    icon="/images/comment_edit_8410_EdMerritt.png"-->
+<!--                    factoryClass="CommentViewFactory"/>-->
+<!--        <applicationService serviceImplementation="ChatCommentModel"/>-->
+<!--        <editor.linePainter implementation="CommentLinePainter"/>-->
 
     </extensions>
 

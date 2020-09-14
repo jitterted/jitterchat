@@ -1,4 +1,4 @@
-package com.jitterted;
+package dev.chatcodes;
 
 import com.intellij.openapi.vfs.VirtualFile;
 

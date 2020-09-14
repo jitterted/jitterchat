@@ -1,4 +1,4 @@
-package com.jitterted;
+package dev.chatcodes;
 
 import com.github.twitch4j.chat.TwitchChat;
 import groovy.util.logging.Slf4j;

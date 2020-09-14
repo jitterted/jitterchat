@@ -1,4 +1,4 @@
-package com.jitterted;
+package dev.chatcodes;
 
 import org.junit.Test;
 

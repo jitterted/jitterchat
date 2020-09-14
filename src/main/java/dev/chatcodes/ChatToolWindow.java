@@ -1,4 +1,4 @@
-package com.jitterted;
+package dev.chatcodes;
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.EventManager;
@@ -8,6 +8,9 @@ import com.github.twitch4j.chat.TwitchChat;
 import com.github.twitch4j.chat.events.CommandEvent;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.google.common.html.HtmlEscapers;
+import com.intellij.credentialStore.CredentialAttributes;
+import com.intellij.credentialStore.CredentialAttributesKt;
+import com.intellij.ide.passwordSafe.PasswordSafe;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -35,12 +38,10 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.event.ActionEvent;
-import java.io.FileReader;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.Properties;
 
 public class ChatToolWindow {
 
@@ -96,13 +97,15 @@ public class ChatToolWindow {
 
         addItalicized("Get set...");
 
-        Properties twitchProperties = new Properties();
-        //@TODO Stop this being a hard coded file path
-        twitchProperties.load(new FileReader("/Users/ghockin/.twitch.properties"));
+        CredentialAttributes credentialAttributes = new CredentialAttributes(
+            CredentialAttributesKt.generateServiceName("ChatCodes", "TwitchOAuthToken")
+        );
+
+        String oAuthToken = PasswordSafe.getInstance().getPassword(credentialAttributes);
 
         OAuth2Credential credential = new OAuth2Credential(
             "twitch",
-            twitchProperties.getProperty("TWITCH_OAUTH_TOKEN")
+            oAuthToken
         );
 
         TwitchClient twitchClient = TwitchClientBuilder.builder()
