@@ -4,6 +4,7 @@ import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.CredentialAttributesKt;
 import com.intellij.credentialStore.Credentials;
 import com.intellij.ide.passwordSafe.PasswordSafe;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 
@@ -31,6 +32,8 @@ public class ChatCodesConfigurable implements Configurable {
 
         Credentials credentials = new Credentials("", settingsPane.getOAuthTokenValue());
         PasswordSafe.getInstance().set(credentialAttributes, credentials);
+
+        PropertiesComponent.getInstance().setValue(settingsPane.CHAT_CODES_SETTINGS_TWITCH_USER_NAME, settingsPane.getTwitchUsernameValue());
     }
 
     @Override

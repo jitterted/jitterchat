@@ -11,6 +11,7 @@ import com.google.common.html.HtmlEscapers;
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.CredentialAttributesKt;
 import com.intellij.ide.passwordSafe.PasswordSafe;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -48,19 +49,18 @@ public class ChatToolWindow {
     private static final Logger log = LoggerFactory.getLogger(ChatToolWindow.class);
     private static final DateTimeFormatter CHAT_TIME_FORMATTER = DateTimeFormatter.ofPattern("kk:mm");
     private final Project project;
+    private final String twitchUsername = PropertiesComponent.getInstance().getValue(ConfigForm.CHAT_CODES_SETTINGS_TWITCH_USER_NAME);
     private TwitchChat twitchChat;
     private JPanel chatContentPanel;
     private JTextPane chatTextPane;
     private JScrollPane chatScrollPane;
     private JTextField myMessage;
-
     private HTMLDocument htmlDocument;
     private Element chatElement;
 
     public ChatToolWindow(ToolWindow toolWindow, Project project) throws IOException {
         this.project = project;
         initializeTextPane();
-
         myMessage.addActionListener(this::sendMessage);
         connect();
     }
@@ -84,7 +84,7 @@ public class ChatToolWindow {
         sendChatMessage(text);
 
         Instant theTimeNow = Instant.now();
-        formatAndWriteChatMessage(theTimeNow, "Spabby", text);
+        formatAndWriteChatMessage(theTimeNow, twitchUsername, text);
 
         textField.setText("");
     }
@@ -116,7 +116,7 @@ public class ChatToolWindow {
 
         twitchChat = twitchClient.getChat();
 
-        twitchChat.joinChannel("spabby");
+        twitchChat.joinChannel(twitchUsername);
         sendChatMessage("The bot has arrived");
 
         EventManager chatEventManager = twitchChat.getEventManager();
@@ -136,13 +136,13 @@ public class ChatToolWindow {
 
     private void sendChatMessage(String message) {
         //@TODO Fix this so it's not hard-coded and is the actual streamer's name
-        twitchChat.sendMessage("spabby", message);
+        twitchChat.sendMessage(twitchUsername, message);
         if (message.charAt(0) != '!') {
             return;
         }
 
         //@TODO See above
-        processCommand(message.substring(1), "Spabby");
+        processCommand(message.substring(1), twitchUsername);
     }
 
     private void onCommand(CommandEvent commandEvent) {
