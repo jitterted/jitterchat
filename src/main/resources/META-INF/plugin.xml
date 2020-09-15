@@ -14,6 +14,7 @@
     <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+
         <toolWindow id="ChatCodes"
                     anchor="right"
                     secondary="true"
@@ -22,14 +23,21 @@
 
         <applicationConfigurable instance="dev.chatcodes.ChatCodesConfigurable" displayName="ChatCodes"/>
 
-<!--        <toolWindow id="Viewer Comments"-->
-<!--                    anchor="bottom"-->
-<!--                    secondary="true"-->
-<!--                    icon="/images/comment_edit_8410_EdMerritt.png"-->
-<!--                    factoryClass="CommentViewFactory"/>-->
-<!--        <applicationService serviceImplementation="ChatCommentModel"/>-->
-<!--        <editor.linePainter implementation="CommentLinePainter"/>-->
+        <toolWindow id="Viewer Comments"
+                    anchor="bottom"
+                    secondary="true"
+                    icon="/images/comment_edit_8410_EdMerritt.png"
+                    factoryClass="dev.chatcodes.CommentViewFactory"/>
+
+        <applicationService serviceImplementation="dev.chatcodes.ChatCommentModel"/>
+
+        <editor.linePainter implementation="dev.chatcodes.CommentLinePainter"/>
 
     </extensions>
+
+    <actions>
+        <action id="dev.chatcodes.ClearCommentsAction" class="dev.chatcodes.ClearCommentsAction"
+                text="Clear ChatCodes Comments"/>
+    </actions>
 
 </idea-plugin>

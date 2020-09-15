@@ -13,7 +13,7 @@ public class ChatCommentModel implements TreeModel {
 
     public static final String COMMENTS_ROOT = "Comments Root";
 
-    private final Map<CommentLocation, String> lineComments = new HashMap<>();
+    private Map<CommentLocation, String> lineComments = new HashMap<>();
 
     private final List<TreeModelListener> treeModelListeners = new ArrayList<>();
 
@@ -57,6 +57,13 @@ public class ChatCommentModel implements TreeModel {
             .map(l -> l.virtualFile)
             .filter(f -> f.equals(file))
             .count();
+    }
+
+    public void clearAllComments() {
+        for (Map.Entry<CommentLocation, String> entry : lineComments.entrySet()) {
+            CommentLocation location = entry.getKey();
+            removeComment(location);
+        }
     }
 
     @Override

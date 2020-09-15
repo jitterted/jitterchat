@@ -205,7 +205,7 @@ public class ChatToolWindow {
                     VirtualFile virtualFile = fileFromEditor(currentEditor());
                     service.addComment(lineNumber, virtualFile, comment, commandUser);
                 });
-                sendMessageToEventLog(commandUser + " added a tooltip to line " + lineNumber);
+                sendMessageToEventLog(commandUser + " added a tooltip to line " + split[1]);
 
             } catch (NumberFormatException e) {
                 chatWrite("Bad line number: " + e.getMessage());
