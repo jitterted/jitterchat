@@ -11,7 +11,6 @@ import com.google.common.html.HtmlEscapers;
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.CredentialAttributesKt;
 import com.intellij.ide.passwordSafe.PasswordSafe;
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -22,6 +21,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -49,7 +49,7 @@ public class ChatToolWindow {
     private static final Logger log = LoggerFactory.getLogger(ChatToolWindow.class);
     private static final DateTimeFormatter CHAT_TIME_FORMATTER = DateTimeFormatter.ofPattern("kk:mm");
     private final Project project;
-    private final String twitchUsername = PropertiesComponent.getInstance().getValue(ConfigForm.CHAT_CODES_SETTINGS_TWITCH_USER_NAME);
+    private String twitchUsername;
     private TwitchChat twitchChat;
     private JPanel chatContentPanel;
     private JTextPane chatTextPane;
@@ -102,6 +102,7 @@ public class ChatToolWindow {
         );
 
         String oAuthToken = PasswordSafe.getInstance().getPassword(credentialAttributes);
+        twitchUsername = PasswordSafe.getInstance().get(credentialAttributes).getUserName();
 
         OAuth2Credential credential = new OAuth2Credential(
             "twitch",
@@ -135,13 +136,11 @@ public class ChatToolWindow {
     }
 
     private void sendChatMessage(String message) {
-        //@TODO Fix this so it's not hard-coded and is the actual streamer's name
         twitchChat.sendMessage(twitchUsername, message);
         if (message.charAt(0) != '!') {
             return;
         }
 
-        //@TODO See above
         processCommand(message.substring(1), twitchUsername);
     }
 
@@ -197,7 +196,6 @@ public class ChatToolWindow {
             int lineNumber;
             try {
                 lineNumber = Integer.parseInt(split[1]) - 1;
-                // comment 26 what is this thing here?
 
                 String comment = split[2];
                 ChatCommentModel service = ServiceManager.getService(ChatCommentModel.class);
@@ -271,8 +269,17 @@ public class ChatToolWindow {
     }
 
     private void initializeTextPane() {
+
+
+        String bgColor =
+            Integer.toHexString(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground().getRGB()).substring(2);
+        String fgColor =
+            Integer.toHexString(EditorColorsManager.getInstance().getGlobalScheme().getDefaultForeground().getRGB()).substring(2);
+
+
         StyleSheet styleSheet = new StyleSheet();
-        styleSheet.addRule("body { font-face: sans-serif; font-size: large; } #chat { padding: 2px; }");
+        styleSheet.addRule("body { color: #" + fgColor + "; background-color: #" + bgColor + "; font-face: sans-serif; font-size: large; } #chat { padding: 2px; }");
+        // felisbinarius: String.format("body { background-color: #%s", $VALUE)
 
         DefaultCaret caret = (DefaultCaret) chatTextPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);

@@ -64,6 +64,7 @@ public class ChatCommentModel implements TreeModel {
             CommentLocation location = entry.getKey();
             removeComment(location);
         }
+        lineComments.clear();
     }
 
     @Override

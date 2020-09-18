@@ -34,9 +34,9 @@ public class ConfigForm {
             CredentialAttributesKt.generateServiceName("ChatCodes", "TwitchOAuthToken")
         );
         String oAuthToken = PasswordSafe.getInstance().getPassword(credentialAttributes);
+        String twitchUserName = PasswordSafe.getInstance().get(credentialAttributes).getUserName();
         textOauthToken.setText(oAuthToken);
-
-        textTwitchUsername.setText(PropertiesComponent.getInstance().getValue(CHAT_CODES_SETTINGS_TWITCH_USER_NAME));
+        textTwitchUsername.setText(twitchUserName);
     }
 
     public char[] getOAuthTokenValue() {
